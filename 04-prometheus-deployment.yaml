@@ -2,7 +2,6 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: prometheus-deployment
-  namespace: monitoring
 spec:
   replicas: 1
   template:
@@ -12,7 +11,7 @@ spec:
     spec:
       containers:
         - name: prometheus
-          image: prom/prometheus:v2.1.0
+          image: prom/prometheus:latest
           args:
             - "--config.file=/etc/prometheus/prometheus.yml"
             - "--storage.tsdb.path=/prometheus/"
