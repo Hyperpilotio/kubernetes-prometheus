@@ -4,7 +4,6 @@ metadata:
   name: prometheus-server-conf
   labels:
     name: prometheus-server-conf
-  namespace: monitoring
 data:
   prometheus.yml: |-
     global:
@@ -27,7 +26,7 @@ data:
           action: keep
           regex: default;kubernetes;https
 
-      - job_name: 'kubernetes-nodes'
+      - job_name: 'kubernetes-kubelet'
 
         scheme: https
 
@@ -76,7 +75,7 @@ data:
           action: replace
           target_label: kubernetes_pod_name
 
-      - job_name: 'kubernetes-cadvisor'
+      - job_name: 'kubernetes-container'
 
         scheme: https
 
@@ -127,3 +126,16 @@ data:
         - source_labels: [__meta_kubernetes_service_name]
           action: replace
           target_label: kubernetes_name
+
+      - job_name: 'kubernetes-node-exporter'
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        kubernetes_sd_configs:
+        - role: node
+
+        relabel_configs:
+          - source_labels: [__address__]
+            regex: '(.*):10250'
+            replacement: '${1}:9100'
+            target_label: __address__
