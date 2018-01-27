@@ -10,6 +10,9 @@ data:
       scrape_interval: 5s
       evaluation_interval: 5s
 
+    remote_write:
+      - url: "http://prometheus-adapter:9201/write"
+
     scrape_configs:
       - job_name: 'kubernetes-apiservers'
 

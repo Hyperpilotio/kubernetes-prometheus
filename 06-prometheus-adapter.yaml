@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus-adapter
+  name: prometheus-adapter
+  namespace: hyperpilot
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus-adapter
+    spec:
+      hostname: prometheus-adapter
+      containers:
+        - image: hyperpilot/remote_storage_adapter:latest
+          args:
+            - "-influxdb-url=http://influxsrv:8086/"
+          name: prometheus-adapter
+          ports:
+            - containerPort: 9201
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: prometheus-adapter
+  name: prometheus-adapter
+  namespace: hyperpilot
+spec:
+  ports:
+  - name: port-1
+    port: 9201
+    protocol: TCP
+    targetPort: 9201
+  selector:
+    app: prometheus-adapter
