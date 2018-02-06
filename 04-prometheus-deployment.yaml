@@ -2,7 +2,6 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: prometheus-deployment
-  namespace: hyperpilot
 spec:
   replicas: 1
   template:
